@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>E‑Shopping | Hometown Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial, sans-serif;}
+    body{background:#f5f5f5;color:#111;}
+
+    #splash{
+      position:fixed;inset:0;background:#232f3e;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      color:#fff;z-index:9999;
+      animation:fadeOut 1s ease 3s forwards;
+    }
+    #splash-logo{font-size:40px;font-weight:bold;color:#ff9900;margin-bottom:8px;}
+    #splash-tagline{font-size:14px;opacity:0.85;}
+    @keyframes fadeOut{to{opacity:0;visibility:hidden;}}
+
+    header{
+      background:#232f3e;color:#fff;padding:10px 16px;
+      display:flex;align-items:center;gap:12px;
+    }
+    .logo-text{font-size:22px;font-weight:bold;color:#ff9900;}
+    .search-bar{flex:1;}
+    .search-bar input{
+      width:100%;padding:7px 10px;border:none;border-radius:3px;
+    }
+    .nav-links a{
+      color:#fff;font-size:13px;margin-left:8px;text-decoration:none;
+    }
+    .nav-links a:hover{text-decoration:underline;}
+    .cart-mini{font-size:13px;cursor:pointer;white-space:nowrap;}
+
+    .hero{
+      background:linear-gradient(120deg,#ff9900,#ffd27f);
+      padding:25px 16px;text-align:center;
+    }
+    .hero h1{margin-bottom:8px;font-size:22px;}
+    .hero p{font-size:14px;margin-bottom:12px;}
+    .hero button{
+      padding:8px 16px;border:none;border-radius:4px;
+      background:#232f3e;color:#fff;cursor:pointer;font-size:14px;
+    }
+
+    .container{padding:16px;}
+    .section-title{font-size:18px;margin-bottom:10px;}
+
+    .categories{
+      display:grid;gap:10px;
+      grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+      margin-bottom:18px;
+    }
+    .category-card{
+      background:#fff;border-radius:5px;
+      padding:12px;text-align:center;
+      box-shadow:0 1px 3px rgba(0,0,0,0.1);
+      font-size:14px;cursor:pointer;
+    }
+    .category-card:hover{background:#fffbf0;}
+
+    .products{
+      display:grid;gap:12px;
+      grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    }
+    .product-card{
+      background:#fff;border-radius:5px;padding:10px;
+      box-shadow:0 1px 3px rgba(0,0,0,0.1);
+      display:flex;flex-direction:column;justify-content:space-between;
+    }
+    .product-img{
+      height:140px;
+      background:#eee;
+      border-radius:4px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      margin-bottom:8px;
+      font-size:12px;
+      color:#555;
+      text-align:center;
+      padding:4px;
+    }
+    .product-img img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .product-name{font-weight:bold;font-size:14px;margin-bottom:4px;}
+    .product-meta{font-size:12px;color:#555;margin-bottom:4px;}
+    .product-price{color:#b12704;font-size:14px;margin-bottom:8px;}
+    .product-card button{
+      padding:6px;border:none;border-radius:4px;
+      background:#ff9900;cursor:pointer;font-size:13px;
+    }
+
+    #cart-panel{
+      position:fixed;top:0;right:-320px;width:300px;height:100%;
+      background:#fff;box-shadow:-2px 0 5px rgba(0,0,0,0.25);
+      padding:12px;z-index:9998;transition:right .3s;
+      display:flex;flex-direction:column;
+    }
+    #cart-panel.open{right:0;}
+    #cart-panel h2{margin-bottom:8px;font-size:18px;}
+    #cart-items{flex:1;overflow-y:auto;font-size:13px;margin-bottom:8px;}
+    .cart-item{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:4px 0;border-bottom:1px solid #eee;
+    }
+    .cart-item span{max-width:60%;}
+    .cart-total{font-weight:bold;margin-top:4px;}
+    .cart-actions button{
+      width:100%;padding:7px;margin-top:6px;border:none;border-radius:4px;
+      font-size:13px;cursor:pointer;
+    }
+    .btn-primary{background:#ff9900;}
+    .btn-secondary{background:#232f3e;color:#fff;}
+
+    footer{
+      margin-top:20px;padding:12px 16px;
+      background:#131a22;color:#ccc;font-size:12px;text-align:center;
+    }
+
+    @media(max-width:600px){
+      header{flex-wrap:wrap;}
+      .nav-links{width:100%;margin-top:6px;text-align:center;}
+    }
+  </style>
+</head>
+<body>
+
+<div id="splash">
+  <div id="splash-logo">E‑Shopping</div>
+  <div id="splash-tagline">Hometown delivery for groceries, clothing, food & electronics</div>
+</div>
+
+<header>
+  <div class="logo-text">E‑Shopping</div>
+  <div class="search-bar">
+    <input id="searchInput" type="text" placeholder="Search for groceries, clothing, mobiles…"
+           oninput="filterProducts()">
+  </div>
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#">Offers</a>
+    <a href="#">Help</a>
+  </div>
+  <div class="cart-mini" onclick="toggleCart()">Cart (<span id="cart-count">0</span>)</div>
+</header>
+
+<section class="hero">
+  <h1>Everything from your hometown</h1>
+  <p>Order groceries, clothing, food and electronics, delivered to your doorstep.</p>
+  <button onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">
+    Start shopping
+  </button>
+</section>
+
+<div class="container">
+  <h2 class="section-title">Shop by Category</h2>
+  <div id="categories" class="categories">
+    <div class="category-card" onclick="filterByCategory('Groceries')">Groceries & General Needs</div>
+    <div class="category-card" onclick="filterByCategory('Clothing')">Clothing & Fashion</div>
+    <div class="category-card" onclick="filterByCategory('Food')">Food & Snacks</div>
+    <div class="category-card" onclick="filterByCategory('Electronics')">Mobiles & Electronics</div>
+    <div class="category-card" onclick="showAll()">Show All</div>
+  </div>
+
+  <h2 class="section-title">Popular Near You</h2>
+  <div id="products" class="products"></div>
+</div>
+
+<div id="cart-panel">
+  <h2>Your Cart</h2>
+  <div id="cart-items"></div>
+  <div class="cart-total">Total: ₹<span id="cart-total">0</span></div>
+  <div class="cart-actions">
+    <button class="btn-primary" onclick="fakeCheckout()">Place Order (Demo)</button>
+    <button class="btn-secondary" onclick="toggleCart()">Close</button>
+  </div>
+</div>
+
+<footer>
+  © 2026 E‑Shopping – Prototype for hometown multi‑category delivery.
+</footer>
+
+<script>
+  // If you don't have local images yet, these can be empty strings ("")
+  const productsData = [
+    {
+      id:1,
+      name:"Daily Grocery Combo",
+      category:"Groceries",
+      desc:"Atta, rice, oil & spices",
+      price:499,
+      image:"https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&h=140&fit=crop"
+    },
+    {
+      id:2,
+      name:"Fresh Veggie Pack",
+      category:"Groceries",
+      desc:"Mixed seasonal vegetables",
+      price:299,
+      image:"https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=200&h=140&fit=crop"
+    },
+    {
+      id:3,
+      name:"Casual Wear Set",
+      category:"Clothing",
+      desc:"T‑shirt & jeans combo",
+      price:999,
+      image:"https://images.unsplash.com/photo-1445205170230-053b83016050?w=200&h=140&fit=crop"
+    },
+    {
+      id:4,
+      name:"Kids School Uniform",
+      category:"Clothing",
+      desc:"Shirt, pants, belt",
+      price:799,
+      image:"https://images.unsplash.com/photo-1503944168849-c1246463e59?w=200&h=140&fit=crop"
+    },
+    {
+      id:5,
+      name:"Evening Snack Combo",
+      category:"Food",
+      desc:"Burger + fries + drink",
+      price:199,
+      image:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&h=140&fit=crop"
+    },
+    {
+      id:6,
+      name:"Family Thali",
+      category:"Food",
+      desc:"Complete meal for 2‑3 people",
+      price:349,
+      image:"https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&h=140&fit=crop"
+    },
+    {
+      id:7,
+      name:"Budget Smartphone",
+      category:"Electronics",
+      desc:"4G/5G, hometown warranty",
+      price:7999,
+      image:"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=140&fit=crop"
+    },
+    {
+      id:8,
+      name:"Wireless Headphones",
+      category:"Electronics",
+      desc:"Bluetooth, long battery",
+      price:2499,
+      image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=140&fit=crop"
+    }
+  ];
+
+  const productsContainer = document.getElementById("products");
+
+  function renderProducts(list){
+    productsContainer.innerHTML = "";
+    list.forEach(p => {
+      const card = document.createElement("div");
+      card.className = "product-card";
+      card.setAttribute("data-id", p.id);
+      card.setAttribute("data-category", p.category);
+
+      // if image fails, show category text
+      const imgHtml = p.image
+        ? `<img src="${p.image}" alt="${p.name}" onerror="this.parentElement.innerText='${p.category}'">`
+        : p.category;
+
+      card.innerHTML = `
+        <div class="product-img">
+          ${imgHtml}
+        </div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-meta">${p.desc}</div>
+        <div class="product-price">₹${p.price}</div>
+        <button onclick="addToCart(${p.id})">Add to Cart</button>
+      `;
+      productsContainer.appendChild(card);
+    });
+  }
+
+  renderProducts(productsData);
+
+  function filterProducts(){
+    const q = document.getElementById("searchInput").value.toLowerCase();
+    const filtered = productsData.filter(p =>
+      p.name.toLowerCase().includes(q) ||
+      p.category.toLowerCase().includes(q) ||
+      p.desc.toLowerCase().includes(q)
+    );
+    renderProducts(filtered);
+  }
+
+  function filterByCategory(cat){
+    const filtered = productsData.filter(p => p.category === cat);
+    renderProducts(filtered);
+  }
+
+  function showAll(){
+    document.getElementById("searchInput").value = "";
+    renderProducts(productsData);
+  }
+
+  let cart = {};
+
+  function loadCart(){
+    const stored = localStorage.getItem("eshoppingCart");
+    if(stored){
+      cart = JSON.parse(stored);
+    }
+    updateCartUI();
+  }
+
+  function saveCart(){
+    localStorage.setItem("eshoppingCart", JSON.stringify(cart));
+  }
+
+  function addToCart(id){
+    const product = productsData.find(p => p.id === id);
+    if(!product) return;
+
+    if(!cart[id]){
+      cart[id] = { ...product, qty:1 };
+    } else {
+      cart[id].qty += 1;
+    }
+    saveCart();
+    updateCartUI();
+  }
+
+  function changeQty(id, delta){
+    if(!cart[id]) return;
+    cart[id].qty += delta;
+    if(cart[id].qty <= 0){
+      delete cart[id];
+    }
+    saveCart();
+    updateCartUI();
+  }
+
+  function clearCart(){
+    cart = {};
+    saveCart();
+    updateCartUI();
+  }
+
+  function updateCartUI(){
+    const cartItemsDiv = document.getElementById("cart-items");
+    const cartCountSpan = document.getElementById("cart-count");
+    const cartTotalSpan = document.getElementById("cart-total");
+
+    cartItemsDiv.innerHTML = "";
+    let totalQty = 0;
+    let totalPrice = 0;
+
+    const ids = Object.keys(cart);
+    if(ids.length === 0){
+      cartItemsDiv.innerHTML = "<p>Your cart is empty.</p>";
+    } else {
+      ids.forEach(id => {
+        const item = cart[id];
+        totalQty += item.qty;
+        totalPrice += item.price * item.qty;
+
+        const row = document.createElement("div");
+        row.className = "cart-item";
+        row.innerHTML = `
+          <span>${item.name} x ${item.qty}</span>
+          <span>
+            ₹${item.price * item.qty}
+            <button onclick="changeQty(${id},-1)">-</button>
+            <button onclick="changeQty(${id},1)">+</button>
+          </span>
+        `;
+        cartItemsDiv.appendChild(row);
+      });
+    }
+
+    cartCountSpan.textContent = totalQty;
+    cartTotalSpan.textContent = totalPrice;
+  }
+
+  function toggleCart(){
+    document.getElementById("cart-panel").classList.toggle("open");
+  }
+
+  function fakeCheckout(){
+    if(Object.keys(cart).length === 0){
+      alert("Cart is empty.");
+      return;
+    }
+    alert("Demo checkout: in real app this will send order to backend / WhatsApp.");
+    clearCart();
+    toggleCart();
+  }
+
+  loadCart();
+</script>
+
+</body>
+</html>
