@@ -92,9 +92,30 @@
     .product-name{font-weight:bold;font-size:14px;margin-bottom:4px;}
     .product-meta{font-size:12px;color:#555;margin-bottom:4px;}
     .product-price{color:#b12704;font-size:14px;margin-bottom:8px;}
-    .product-card button{
-      padding:6px;border:none;border-radius:4px;
-      background:#ff9900;cursor:pointer;font-size:13px;
+
+    /* COMMON BUTTON STYLE + EFFECT */
+    button{
+      cursor:pointer;
+      transition:transform 0.1s ease, box-shadow 0.1s ease, background-color 0.2s;
+    }
+    .product-card button,
+    .hero button,
+    .cart-actions button{
+      padding:6px 10px;
+      border:none;
+      border-radius:4px;
+      background:#ff9900;
+      font-size:13px;
+      box-shadow:0 2px 4px rgba(0,0,0,0.2);
+    }
+    .btn-secondary{background:#232f3e;color:#fff;}
+    button:hover{
+      background-color:#ffa91f;
+      box-shadow:0 3px 6px rgba(0,0,0,0.25);
+    }
+    button:active{
+      transform:scale(0.97) translateY(1px);
+      box-shadow:0 1px 3px rgba(0,0,0,0.2);
     }
 
     #cart-panel{
@@ -113,11 +134,8 @@
     .cart-item span{max-width:60%;}
     .cart-total{font-weight:bold;margin-top:4px;}
     .cart-actions button{
-      width:100%;padding:7px;margin-top:6px;border:none;border-radius:4px;
-      font-size:13px;cursor:pointer;
+      width:100%;margin-top:6px;
     }
-    .btn-primary{background:#ff9900;}
-    .btn-secondary{background:#232f3e;color:#fff;}
 
     footer{
       margin-top:20px;padding:12px 16px;
@@ -134,13 +152,13 @@
 
 <div id="splash">
   <div id="splash-logo">E‑Shopping</div>
-  <div id="splash-tagline">Hometown delivery for groceries, clothing, food & electronics</div>
+  <div id="splash-tagline">Hometown delivery for groceries, clothing, medicines, food & electronics</div>
 </div>
 
 <header>
   <div class="logo-text">E‑Shopping</div>
   <div class="search-bar">
-    <input id="searchInput" type="text" placeholder="Search for groceries, clothing, mobiles…"
+    <input id="searchInput" type="text" placeholder="Search groceries, clothing, medicines, mobiles…"
            oninput="filterProducts()">
   </div>
   <div class="nav-links">
@@ -153,7 +171,7 @@
 
 <section class="hero">
   <h1>Everything from your hometown</h1>
-  <p>Order groceries, clothing, food and electronics, delivered to your doorstep.</p>
+  <p>Groceries, clothing, medicines, food and electronics delivered to your door.</p>
   <button onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">
     Start shopping
   </button>
@@ -166,6 +184,7 @@
     <div class="category-card" onclick="filterByCategory('Clothing')">Clothing & Fashion</div>
     <div class="category-card" onclick="filterByCategory('Food')">Food & Snacks</div>
     <div class="category-card" onclick="filterByCategory('Electronics')">Mobiles & Electronics</div>
+    <div class="category-card" onclick="filterByCategory('Medicines')">Medicines & Health</div>
     <div class="category-card" onclick="showAll()">Show All</div>
   </div>
 
@@ -188,72 +207,29 @@
 </footer>
 
 <script>
-  // If you don't have local images yet, these can be empty strings ("")
+  // Products – more items + Medicines category
   const productsData = [
-    {
-      id:1,
-      name:"Daily Grocery Combo",
-      category:"Groceries",
-      desc:"Atta, rice, oil & spices",
-      price:499,
-      image:"https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&h=140&fit=crop"
-    },
-    {
-      id:2,
-      name:"Fresh Veggie Pack",
-      category:"Groceries",
-      desc:"Mixed seasonal vegetables",
-      price:299,
-      image:"https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=200&h=140&fit=crop"
-    },
-    {
-      id:3,
-      name:"Casual Wear Set",
-      category:"Clothing",
-      desc:"T‑shirt & jeans combo",
-      price:999,
-      image:"https://images.unsplash.com/photo-1445205170230-053b83016050?w=200&h=140&fit=crop"
-    },
-    {
-      id:4,
-      name:"Kids School Uniform",
-      category:"Clothing",
-      desc:"Shirt, pants, belt",
-      price:799,
-      image:"https://images.unsplash.com/photo-1503944168849-c1246463e59?w=200&h=140&fit=crop"
-    },
-    {
-      id:5,
-      name:"Evening Snack Combo",
-      category:"Food",
-      desc:"Burger + fries + drink",
-      price:199,
-      image:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&h=140&fit=crop"
-    },
-    {
-      id:6,
-      name:"Family Thali",
-      category:"Food",
-      desc:"Complete meal for 2‑3 people",
-      price:349,
-      image:"https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&h=140&fit=crop"
-    },
-    {
-      id:7,
-      name:"Budget Smartphone",
-      category:"Electronics",
-      desc:"4G/5G, hometown warranty",
-      price:7999,
-      image:"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=140&fit=crop"
-    },
-    {
-      id:8,
-      name:"Wireless Headphones",
-      category:"Electronics",
-      desc:"Bluetooth, long battery",
-      price:2499,
-      image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=140&fit=crop"
-    }
+    // Groceries
+    {id:1, name:"Daily Grocery Combo", category:"Groceries", desc:"Atta, rice, oil & spices", price:499, image:"images/grocery-combo.jpg"},
+    {id:2, name:"Fresh Veggie Pack", category:"Groceries", desc:"Mixed seasonal vegetables", price:299, image:"images/veggie-pack.jpg"},
+    {id:3, name:"Breakfast Essentials", category:"Groceries", desc:"Bread, eggs, milk & butter", price:259, image:""},
+    // Clothing
+    {id:4, name:"Casual Wear Set", category:"Clothing", desc:"T‑shirt & jeans combo", price:999, image:"images/casual-wear.jpg"},
+    {id:5, name:"Kids School Uniform", category:"Clothing", desc:"Shirt, pants, belt", price:799, image:"images/school-uniform.jpg"},
+    {id:6, name:"Winter Hoodie", category:"Clothing", desc:"Unisex warm hoodie", price:1199, image:""},
+    // Food
+    {id:7, name:"Evening Snack Combo", category:"Food", desc:"Burger + fries + drink", price:199, image:"images/snack-combo.jpg"},
+    {id:8, name:"Family Thali", category:"Food", desc:"Complete meal for 2‑3 people", price:349, image:"images/family-thali.jpg"},
+    {id:9, name:"South Indian Breakfast", category:"Food", desc:"Idli, dosa & chutney", price:189, image:""},
+    // Electronics
+    {id:10, name:"Budget Smartphone", category:"Electronics", desc:"4G/5G, hometown warranty", price:7999, image:"images/budget-phone.jpg"},
+    {id:11, name:"Wireless Headphones", category:"Electronics", desc:"Bluetooth, long battery", price:2499, image:"images/headphones.jpg"},
+    {id:12, name:"Power Bank 10000mAh", category:"Electronics", desc:"Fast charging, compact", price:1299, image:""},
+    // Medicines
+    {id:13, name:"Paracetamol Tablets", category:"Medicines", desc:"Relief from fever & pain (strip)", price:49, image:""},
+    {id:14, name:"Cough Syrup", category:"Medicines", desc:"For dry & wet cough", price:129, image:""},
+    {id:15, name:"Vitamin C Tablets", category:"Medicines", desc:"Immunity support", price:199, image:""},
+    {id:16, name:"First Aid Kit", category:"Medicines", desc:"Basic home first aid box", price:499, image:""}
   ];
 
   const productsContainer = document.getElementById("products");
@@ -266,7 +242,6 @@
       card.setAttribute("data-id", p.id);
       card.setAttribute("data-category", p.category);
 
-      // if image fails, show category text
       const imgHtml = p.image
         ? `<img src="${p.image}" alt="${p.name}" onerror="this.parentElement.innerText='${p.category}'">`
         : p.category;

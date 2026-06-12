@@ -1,0 +1,62 @@
+
+@import "tailwindcss";
+
+:root {
+  --color-brand-green: #33411f;
+  --color-brand-gold: #b78926;
+  --color-brand-gold-light: #f2cf76;
+  --color-brand-red: #7a2c1d;
+  --color-brand-cream: #f7eee3;
+  --color-brand-black: #111827;
+  --color-brand-matte: #e5d4b2;
+  --color-brand-yellow-light: #fff3cd;
+  --color-brand-sand: #bfa78b;
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Inter", sans-serif;
+  --radius-xl: 1.75rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.95), rgba(247, 238, 227, 0.98) 35%), linear-gradient(180deg, #fffdf6 0%, #f3e8d7 100%);
+  color: var(--color-brand-black);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(183, 137, 38, 0.2);
+  color: var(--color-brand-black);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(143, 108, 71, 0.12);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+}

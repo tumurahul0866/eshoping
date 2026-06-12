@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Better Pic</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash" class="splash">
+  <div class="brand">
+    <div class="logo-box">TBP</div>
+    <h1 class="brand-title">THE BETTER PIC</h1>
+    <p class="brand-tagline">Choose • Vote • Win</p>
+  </div>
+</div>
+
+<!-- APP CONTAINER -->
+<div id="main" class="app hidden">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <span class="logo-dot"></span>
+      <span class="app-title">The Better Pic</span>
+    </div>
+    <div id="profileBtn" class="profile-btn">👤</div>
+  </header>
+
+  <!-- AUTH CARD -->
+  <section class="card" id="authCard">
+    <div class="tabs">
+      <div id="signInTab" class="tab active" onclick="switchTab('login')">Sign In</div>
+      <div id="registerTab" class="tab" onclick="switchTab('register')">Register</div>
+    </div>
+
+    <div id="loginBox">
+      <input id="loginEmail" type="email" placeholder="Email">
+      <input id="loginPass" type="password" placeholder="Password">
+      <p class="error" id="loginError"></p>
+      <button class="primary" onclick="login()">Login</button>
+    </div>
+
+    <div id="registerBox" class="hidden">
+      <input id="regEmail" type="email" placeholder="Email">
+      <input id="regPass" type="password" placeholder="Password">
+      <input id="regConfirm" type="password" placeholder="Confirm Password">
+      <p class="error" id="registerError"></p>
+      <button class="primary" onclick="register()">Create Account</button>
+    </div>
+  </section>
+
+  <!-- LOBBY CARD -->
+  <section class="card hidden" id="lobby">
+    <h3>Lobby</h3>
+    <p class="muted">Welcome, <strong id="userEmail"></strong></p>
+    <button class="primary" onclick="createRoom()">Create Room</button>
+    <button class="secondary" onclick="joinRoom()">Join Room</button>
+    <button class="link" onclick="logout()">Logout</button>
+  </section>
+
+  <!-- PROFILE CARD -->
+  <section class="card hidden" id="profilePage">
+    <div class="profile-page">
+      <div class="profile-avatar">👤</div>
+      <h3>My Profile</h3>
+      <p class="label">Email</p>
+      <p id="profileEmail" class="value"></p>
+      <button class="primary" onclick="backToLobby()">Back to Lobby</button>
+      <button class="secondary" onclick="logout()">Logout</button>
+    </div>
+  </section>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
